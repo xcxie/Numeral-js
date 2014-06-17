@@ -616,6 +616,13 @@
             return numeral(this);
         },
 
+        d2lFormat : function (inputString, roundingFunction) {
+            return this.format(
+                    inputString.replace( '{0}', 0 ).replace( '{1}', '-' ),
+                    roundingFunction 
+                );
+        },
+
         format : function (inputString, roundingFunction) {
             return formatNumeral(this, 
                   inputString ? inputString : defaultFormat, 
