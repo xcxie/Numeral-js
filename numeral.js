@@ -280,8 +280,17 @@
             w,
             precision,
             thousands,
+            groupSize,
             d = '',
             neg = false;
+
+        //check if a custom digit group size has been set
+        if (
+                languages[currentLanguage].hasOwnProperty('number') && 
+                languages[currentLanguage].number.hasOwnProperty('groupSize')
+            ) {
+            groupSize = languages[currentLanguage].number.groupSize;
+        }
 
         // check if number is zero and a custom zero format has been set
         if (value === 0 && zeroFormat !== null) {
@@ -410,7 +419,16 @@
             }
 
             if (thousands > -1) {
-                w = w.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1' + languages[currentLanguage].delimiters.thousands);
+                var regexStr = '(\\d)(?=(\\d{3})+(?!\\d))';
+
+                if (groupSize && groupSize !== 3) {
+                    regexStr = regexStr.replace('3', groupSize);
+                }
+
+                var regex = new RegExp(regexStr, 'g');
+
+                w = w.toString().replace(regex, '$1' + languages[currentLanguage].delimiters.thousands);
+
             }
 
             if (format.indexOf('.') === 0) {
